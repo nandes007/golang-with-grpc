@@ -19,4 +19,8 @@ sqlc:
 test:
 	go test -v -cover ./...
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc
+# This need to run because when i run test using wsl it cache the test
+cleantestcache:
+	go clean -testcache
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc test cleantestcache
