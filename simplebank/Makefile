@@ -23,4 +23,7 @@ test:
 cleantestcache:
 	go clean -testcache
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc test cleantestcache
+server:
+	go run main.go
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc test cleantestcache server
