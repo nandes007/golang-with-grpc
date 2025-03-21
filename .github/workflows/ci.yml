@@ -6,12 +6,12 @@ name: ci-test
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'simplebank/**'
+    # paths:
+    #   - 'simplebank/**'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'simplebank/**'
+    # paths:
+    #   - 'simplebank/**'
 
 jobs:
 
