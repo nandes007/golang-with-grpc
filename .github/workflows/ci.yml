@@ -43,5 +43,15 @@ jobs:
     -  name: Check out code into the Go module directory 
        uses: actions/checkout@v4
 
+    - name: Navigate to simplebank directory
+      run: cd simplebank
+
+    - name: Run migrations
+      run: |
+        cd simplebank
+        make migrateup
+
     - name: Test
-      run: make test
+      run: |
+        cd simplebank
+        make test
