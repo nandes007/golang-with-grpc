@@ -56,9 +56,9 @@ jobs:
     # Need to fix deploy below command
     # Currently it still can deploy because of permission github-ci user not capable. Fix this future
 
-    # - name: Deploy image to Amazon EKS
-    #   run: |
-    #     cd simplebank
-    #     kubectl apply -f eks/aws-auth.yaml
-    #     kubectl apply -f eks/deployment.yaml
-    #     kubectl apply -f eks/service.yaml
+    - name: Deploy image to Amazon EKS
+      run: |
+        cd simplebank
+        kubectl apply -f eks/aws-auth.yaml
+        kubectl apply -f eks/deployment.yaml
+        kubectl apply -f eks/service.yaml
