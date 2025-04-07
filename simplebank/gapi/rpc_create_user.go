@@ -50,7 +50,7 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 	opts := []asynq.Option{
 		asynq.MaxRetry(10),
 		asynq.ProcessIn(10 * time.Second),
-		asynq.Queue("critical"),
+		asynq.Queue(worker.QueueCritical),
 	}
 	err = server.taskDistributor.DistrubuteTaskSendVerifyEmail(ctx, taskPayload, opts...)
 	if err != nil {
