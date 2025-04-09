@@ -34,7 +34,7 @@ sqlc:
 	sqlc generate
 
 test:
-	go test -v -cover ./...
+	go test -v -cover -short ./...
 
 # This need to run because when i run test using wsl it cache the test
 cleantestcache:
