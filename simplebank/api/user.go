@@ -1,11 +1,11 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/nandes007/simplebank/db/sqlc"
 	"github.com/nandes007/simplebank/util"
@@ -96,7 +96,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 
 	user, err := server.store.GetUser(ctx, req.Username)
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}

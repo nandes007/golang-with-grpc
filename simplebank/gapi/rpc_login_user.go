@@ -2,8 +2,8 @@ package gapi
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/nandes007/simplebank/db/sqlc"
 	"github.com/nandes007/simplebank/pb"
@@ -23,7 +23,7 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 
 	user, err := server.store.GetUser(ctx, req.GetUsername())
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "user not found: %s", err)
 		}
 

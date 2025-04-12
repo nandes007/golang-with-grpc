@@ -12,7 +12,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	mockdb "github.com/nandes007/simplebank/db/mock"
 	db "github.com/nandes007/simplebank/db/sqlc"
@@ -88,7 +87,7 @@ func TestGetAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, pgx.ErrNoRows)
+					Return(db.Account{}, db.ErrRecordNotFound)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
@@ -558,7 +557,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, pgx.ErrNoRows)
+					Return(db.Account{}, db.ErrRecordNotFound)
 
 				store.EXPECT().
 					UpdateAccount(gomock.Any(), gomock.Any()).
@@ -775,7 +774,7 @@ func TestDeleteAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, pgx.ErrNoRows)
+					Return(db.Account{}, db.ErrRecordNotFound)
 
 				store.EXPECT().
 					DeleteAccount(gomock.Any(), gomock.Any()).

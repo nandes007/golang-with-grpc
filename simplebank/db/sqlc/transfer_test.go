@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/nandes007/simplebank/util"
 	"github.com/stretchr/testify/require"
 )
@@ -83,7 +82,7 @@ func TestDeleteTransfer(t *testing.T) {
 	transfer2, err := testStore.GetTransfer(context.Background(), transfer.ID)
 	require.Empty(t, transfer2)
 	require.Error(t, err)
-	require.EqualError(t, err, pgx.ErrNoRows.Error())
+	require.EqualError(t, err, ErrRecordNotFound.Error())
 }
 
 func TestGetListTransfer(t *testing.T) {
