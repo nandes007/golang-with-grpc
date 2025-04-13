@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	mockdb "github.com/nandes007/simplebank/db/mock"
 	db "github.com/nandes007/simplebank/db/sqlc"
@@ -23,6 +24,7 @@ func TestUpdateUserAPI(t *testing.T) {
 	newName := util.RandomOwner()
 	newEmail := util.RandomEmail()
 	invalidEmail := "invalid-email"
+	toShortPassword := "abc"
 
 	testCases := []struct {
 		name          string
@@ -74,6 +76,31 @@ func TestUpdateUserAPI(t *testing.T) {
 				require.Equal(t, user.Username, updatedUser.Username)
 				require.Equal(t, newName, updatedUser.FullName)
 				require.Equal(t, newEmail, updatedUser.Email)
+			},
+		},
+		{
+			name: "InternalError",
+			req: &pb.UpdateUserRequest{
+				Username: user.Username,
+				FullName: &newName,
+				Email:    &newEmail,
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					UpdateUser(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(db.User{}, &pgconn.PgError{
+						Code: "3D00",
+					})
+			},
+			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
+				return newContextWithBearerToken(t, tokenMaker, user.Username, time.Minute)
+			},
+			checkResponse: func(t *testing.T, res *pb.UpdateUserResponse, err error) {
+				require.Error(t, err)
+				st, ok := status.FromError(err)
+				require.True(t, ok)
+				require.Equal(t, codes.Internal, st.Code())
 			},
 		},
 		{
@@ -149,6 +176,29 @@ func TestUpdateUserAPI(t *testing.T) {
 				Username: user.Username,
 				FullName: &newName,
 				Email:    &invalidEmail,
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					UpdateUser(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
+				return newContextWithBearerToken(t, tokenMaker, user.Username, time.Minute)
+			},
+			checkResponse: func(t *testing.T, res *pb.UpdateUserResponse, err error) {
+				require.Error(t, err)
+				st, ok := status.FromError(err)
+				require.True(t, ok)
+				require.Equal(t, codes.InvalidArgument, st.Code())
+			},
+		},
+		{
+			name: "ToShortPassword",
+			req: &pb.UpdateUserRequest{
+				Username: user.Username,
+				FullName: &newName,
+				Email:    &newEmail,
+				Password: &toShortPassword,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
