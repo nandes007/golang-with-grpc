@@ -103,9 +103,7 @@ func TestGetAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.Account{}, db.ErrConnectionFailur)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -220,9 +218,7 @@ func TestCreateAccountAPI(t *testing.T) {
 						Balance:  0,
 					})).
 					Times(1).
-					Return(db.Account{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.Account{}, db.ErrConnectionFailur)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -382,9 +378,7 @@ func TestListAccountsAPI(t *testing.T) {
 				store.EXPECT().
 					ListAccounts(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return([]db.Account{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return([]db.Account{}, db.ErrConnectionFailur)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -580,9 +574,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.Account{}, db.ErrConnectionFailur)
 
 				store.EXPECT().
 					UpdateAccount(gomock.Any(), gomock.Any()).
@@ -610,9 +602,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 				store.EXPECT().
 					UpdateAccount(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.Account{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.Account{}, db.ErrConnectionFailur)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -794,9 +784,7 @@ func TestDeleteAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.Account{}, db.ErrConnectionFailur)
 
 				store.EXPECT().
 					DeleteAccount(gomock.Any(), gomock.Any()).
@@ -821,9 +809,7 @@ func TestDeleteAccountAPI(t *testing.T) {
 				store.EXPECT().
 					DeleteAccount(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(&pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.ErrConnectionFailur)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	mockdb "github.com/nandes007/simplebank/db/mock"
 	db "github.com/nandes007/simplebank/db/sqlc"
@@ -89,9 +88,7 @@ func TestUpdateUserAPI(t *testing.T) {
 				store.EXPECT().
 					UpdateUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.User{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.User{}, db.ErrConnectionFailur)
 			},
 			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
 				return newContextWithBearerToken(t, tokenMaker, user.Username, time.Minute)

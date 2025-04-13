@@ -10,12 +10,17 @@ import (
 const (
 	ForeignKeyViolation = "23503"
 	UniqueViolation     = "23505"
+	ConnectionFailur    = "08006"
 )
 
 var ErrRecordNotFound = pgx.ErrNoRows
 
 var ErrUniqueViolation = &pgconn.PgError{
 	Code: UniqueViolation,
+}
+
+var ErrConnectionFailur = &pgconn.PgError{
+	Code: ConnectionFailur,
 }
 
 func ErrorCode(err error) string {

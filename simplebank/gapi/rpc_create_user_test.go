@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/jackc/pgx/v5/pgconn"
 	mockdb "github.com/nandes007/simplebank/db/mock"
 	db "github.com/nandes007/simplebank/db/sqlc"
 	"github.com/nandes007/simplebank/pb"
@@ -128,9 +127,7 @@ func TestCreateUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUserTx(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.CreateUserTxResult{}, &pgconn.PgError{
-						Code: "3D00",
-					})
+					Return(db.CreateUserTxResult{}, db.ErrConnectionFailur)
 
 				taskDistributor.EXPECT().
 					DistrubuteTaskSendVerifyEmail(gomock.Any(), gomock.Any(), gomock.Any()).
