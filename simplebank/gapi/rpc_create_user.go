@@ -48,8 +48,7 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 	txResult, err := server.store.CreateUserTx(ctx, arg)
 	if err != nil {
-		errorCode := db.ErrorCode(err)
-		if errorCode == db.UniqueViolation {
+		if db.ErrorCode(err) == db.UniqueViolation {
 			return nil, status.Errorf(codes.AlreadyExists, "username already exists: %s", err)
 		}
 
