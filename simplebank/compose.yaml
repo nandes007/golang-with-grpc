@@ -1,10 +1,14 @@
 services:
   postgres:
     image: postgres:17-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=simple_bank
+    ports:
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-simple_bank}"]
       # test: ["CMD-SHELL", "pg_isready -U root -d simple_bank"]
@@ -12,15 +16,24 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+  redis:
+    image: redis:8.0-M04-alpine
   api:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+      - "9090:9090"
     environment:
       - DB_URL=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+      - REDIS_ADDRESS=redis:6379
     depends_on:
       postgres:
         condition: service_healthy
         restart: true
+      redis:
+        condition: service_started
+        
+volumes:
+  db-data:
