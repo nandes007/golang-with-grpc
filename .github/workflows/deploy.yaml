@@ -18,11 +18,11 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
 
-    - name: Intall kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'v1.21.3'
-      id: install
+    # - name: Intall kubectl
+    #   uses: azure/setup-kubectl@v1
+    #   with:
+    #     version: 'v1.21.3'
+    #   id: install
 
     # - name: Configure AWS credentials
     #   uses: aws-actions/configure-aws-credentials@v1
