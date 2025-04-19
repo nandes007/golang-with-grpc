@@ -10,7 +10,7 @@ Through this project, I aim to:
 - Build practical examples that simulate real-world use cases, helping solidify my understanding of gRPC in production-grade applications.
 - This repository is not only a personal reference but also a resource for anyone interested in learning gRPC with Go. Contributions, suggestions, or feedback are always welcome—feel free to open an issue or submit a pull request if you have ideas for improvement!
 
-I've create simple project from this learning journey. You can check it out in simplebank directory and below the guide setup 👇.
+I've create simple project from this learning journey. You can check it out in [simplebank](https://github.com/nandes007/golang-with-grpc/tree/main/simplebank) directory and below the guide setup 👇.
 ## Simple bank service
 The service that we’re going to build is a simple bank. It will provide APIs for the frontend to do following things:
 
